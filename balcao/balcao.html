@@ -18,11 +18,11 @@
     <div class="formulario">
         <div class="row">
 
-            <!-- Atendente -->
+            <!-- Atendente
             <div class="input-field col s12">
                 <input id="attendant_name" type="text" class="validate">
                 <label for="attendant_name">Atendente</label>
-            </div>
+            </div> -->
 
             <!-- Itens do pedido -->
             <div class="input-field col s12">
@@ -30,6 +30,8 @@
                     <option value="1">Pão</option>
                     <option value="2">Pastel</option>
                     <option value="3">Sanduíche</option>
+                    <option value="4">Salgado</option>
+                    <option value="4">Pizza</option>
                 </select>
                 <label>Selecione os itens do pedido</label>
             </div>
@@ -85,6 +87,16 @@
     </div>
 </div>
 
+<!-- Modal de Confirmação -->
+<div id="successModal" class="modal">
+    <div class="modal-content">
+        <h4>Pedido criado com sucesso!</h4>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat" onclick="goTo('listagemPedidos')">Ok</a>
+    </div>
+</div>
+
 <!-- (códigos posteriores) -->
 
 <script>
@@ -122,45 +134,60 @@
         });
     });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            var elems = document.querySelectorAll('select');
-            var instances = M.FormSelect.init(elems);
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems);
+    });
+
+    function createOrder() {
+        // let attendant = $("#attendant_name").val();
+        let client_name = $("#client_name").val();
+        let observation = $("#observation").val();
+        let delivery = $("#delivery").prop("checked");
+
+        let selectedItems = [];
+        $("select option:selected").each(function () {
+            const itemId = $(this).val();
+            const quantity = $(`#quantity_${itemId}`).val();
+            const name = $(this).text();
+            selectedItems.push({ name: name, quantity: quantity });
         });
 
-        function createOrder() {
-            let attendant = $("#attendant_name").val();
-            let client_name = $("#client_name").val();
-            let observation = $("#observation").val();
-            let delivery = $("#delivery").prop("checked");
+        let order = {
+            // attendant: attendant,
+            custumer: client_name,
+            observation: observation,
+            delivery: delivery,
+            items: selectedItems
+        };
 
-            let selectedItems = {};
-            $("select option:selected").each(function () {
-                let itemId = $(this).val();
-                let quantity = $(`#quantity_${itemId}`).val();
-                selectedItems[$(this).text()] = { quantity: quantity };
-            });
+        $.ajax({
+            url: "http://localhost:8080/api/orders",
+            crossDomain: true,
+            dataType: 'json',
+            data: order,
+            success: function (data) {
+                $("#successModal").modal('open');
+            },
+            type: 'POST'
+        });
+    }
 
-            let order = {
-                attendant: attendant,
-                client_name: client_name,
-                observation: observation,
-                delivery: delivery,
-                items: selectedItems
-            };
+    function goTo(page) {
 
-            $.ajax({
-                url: "http://localhost:8080/api/orders",
-                crossDomain: true,
-                dataType: 'json',
-                data: order,
-                success: function (data) {
-                    alert('Pedido cadastrado com sucesso');
-                },
-                type: 'POST'
-            });
+        switch (page) {
+            case "listagemPedidos":
+                page = "balcao/listagemPedidos.html"
+                break;
+
+            default:
+                break;
         }
 
-    </script>
+        window.location.href = page;
+    }
+
+</script>
 
 </body>
 
