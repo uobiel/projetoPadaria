@@ -8,6 +8,8 @@
     <script src="../js/materialize.min.js"></script>
     <link rel="stylesheet" href="balcao.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <title>Novo Pedido</title>
 </head>
 
@@ -79,8 +81,8 @@
             var elems = document.querySelectorAll('.modal');
             var instances = M.Modal.init(elems);
 
-            var selectElems = document.querySelectorAll('select');
-            var selectInstances = M.FormSelect.init(selectElems);
+            // var selectElems = document.querySelectorAll('select');
+            // var selectInstances = M.FormSelect.init(selectElems);
         });
 
 
@@ -89,19 +91,25 @@
             var instances = M.FormSelect.init(elems);
         });
 
-
         function createOrder(){
             //Falta adicionar a quantidade de cada item
             let attendant = $("#attendant_name").val();
             let client_name = $("#client_name").val();
             let observation = $("#observation").val();
-            let delivery = $("#delivery").val();
+            let delivery = $("#delivery").prop("checked");
+
+            // Obter itens selecionados
+            let selectedItems = [];
+            $("select option:selected").each(function () {
+                selectedItems.push($(this).text()); // Modificado para pegar o texto do item
+            });
             
             let order = {
-                attendant: attendant_name,
+                attendant: attendant,
                 client_name: client_name,
                 observation: observation,
                 delivery: delivery,
+                items: selectedItems
             }
 
             $.ajax({
