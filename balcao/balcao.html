@@ -7,44 +7,115 @@
     <link rel="stylesheet" href="../css/materialize.min.css">
     <script src="../js/materialize.min.js"></script>
     <link rel="stylesheet" href="balcao.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
     <title>Novo Pedido</title>
 </head>
 
 <body>
 
     <div class="page">
+
         <div class="formulario">
             <div class="row">
 
-                <div class="input-field col s6">
-                    <input placeholder="Placeholder" id="item" type="text" class="validate">
-                    <label for="first_name">First Name</label>
-                </div>
-
-                <div class="input-field col s6">
-                    <input id="last_name" type="text" class="validate">
-                    <label for="last_name">Last Name</label>
+                <div class="input-field col s12">
+                    <input id="attendant_name" type="text" class="validate">
+                    <label for="attendant_name">Atendente</label>
                 </div>
 
                 <div class="input-field col s12">
                     <select multiple>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
-                        <!-- Adicione mais opções conforme necessário -->
+                        <option value="1">Pão</option>
+                        <option value="2">Pastel</option>
+                        <option value="3">Sanduíche</option>
                     </select>
-                    <label>Select Multiple Items</label>
+                    <label>Selecione os itens do pedido</label>
                 </div>
 
+                <div class="input-field col s6">
+                    <input id="client_name" type="text" class="validate">
+                    <label for="client_name">Cliente</label>
+                </div>
+
+                <div class="input-field col s6">
+                    <textarea id="observation" class="materialize-textarea validate"></textarea>
+                    <label for="observation">Observação</label>
+                </div>
+
+                <p class="col s12 mb-2 delivery">
+                    <label>
+                      <input id="delivery" type="checkbox" checked="checked" />
+                      <span>Entrega?</span>
+                    </label>
+                </p>
+
+                <div class="input-field col s12 mb-2">
+                    <a class="btn waves-effect waves-light col s12 modal-trigger" href="#confirmationModal">Confirmar Pedido
+                        <i class="material-icons right"></i>
+                    </a>
+                </div>
+                
             </div>
+        </div>
+
+    </div>
+
+
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <h4>Deseja confirmar o pedido?</h4>
+            <p>O pedido será entregue para o preparo!</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat" onclick="createOrder()">Enviar</a>
         </div>
     </div>
 
+
     <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.modal');
+            var instances = M.Modal.init(elems);
+
+            var selectElems = document.querySelectorAll('select');
+            var selectInstances = M.FormSelect.init(selectElems);
+        });
+
+
         document.addEventListener('DOMContentLoaded', function () {
             var elems = document.querySelectorAll('select');
             var instances = M.FormSelect.init(elems);
         });
+
+
+        function createOrder(){
+            //Falta adicionar a quantidade de cada item
+            let attendant = $("#attendant_name").val();
+            let client_name = $("#client_name").val();
+            let observation = $("#observation").val();
+            let delivery = $("#delivery").val();
+            
+            let order = {
+                attendant: attendant_name,
+                client_name: client_name,
+                observation: observation,
+                delivery: delivery,
+            }
+
+            $.ajax({
+                url: "http://localhost:8080/api/orders",
+                crossDomain: true,
+                dataType: 'json',
+                data: order,
+                success: function (data) {
+                    alert('Pedido cadastrado com sucesso');
+                },
+                type: 'POST'
+            });
+        }
+
     </script>
 
 </body>
