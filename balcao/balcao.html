@@ -13,104 +13,140 @@
     <title>Novo Pedido</title>
 </head>
 
-<body>
+<div class="page">
 
-    <div class="page">
+    <div class="formulario">
+        <div class="row">
 
-        <div class="formulario">
-            <div class="row">
-
-                <div class="input-field col s12">
-                    <input id="attendant_name" type="text" class="validate">
-                    <label for="attendant_name">Atendente</label>
-                </div>
-
-                <div class="input-field col s12">
-                    <select multiple>
-                        <option value="1">Pão</option>
-                        <option value="2">Pastel</option>
-                        <option value="3">Sanduíche</option>
-                    </select>
-                    <label>Selecione os itens do pedido</label>
-                </div>
-
-                <div class="input-field col s6">
-                    <input id="client_name" type="text" class="validate">
-                    <label for="client_name">Cliente</label>
-                </div>
-
-                <div class="input-field col s6">
-                    <textarea id="observation" class="materialize-textarea validate"></textarea>
-                    <label for="observation">Observação</label>
-                </div>
-
-                <p class="col s12 mb-2 delivery">
-                    <label>
-                      <input id="delivery" type="checkbox" checked="checked" />
-                      <span>Entrega?</span>
-                    </label>
-                </p>
-
-                <div class="input-field col s12 mb-2">
-                    <a class="btn waves-effect waves-light col s12 modal-trigger" href="#confirmationModal">Confirmar Pedido
-                        <i class="material-icons right"></i>
-                    </a>
-                </div>
-                
+            <!-- Atendente -->
+            <div class="input-field col s12">
+                <input id="attendant_name" type="text" class="validate">
+                <label for="attendant_name">Atendente</label>
             </div>
-        </div>
 
+            <!-- Itens do pedido -->
+            <div class="input-field col s12">
+                <select id="item_select" multiple>
+                    <option value="1">Pão</option>
+                    <option value="2">Pastel</option>
+                    <option value="3">Sanduíche</option>
+                </select>
+                <label>Selecione os itens do pedido</label>
+            </div>
+
+            <!-- Lista de Quantidades (inicialmente oculto) -->
+            <div class="input-field col s12" id="quantities_container" style="display: none;">
+                <div class="row" id="quantities_row">
+                    <!-- Dinamicamente preenchido com JavaScript -->
+                </div>
+            </div>
+
+            <!-- Cliente -->
+            <div class="input-field col s6">
+                <input id="client_name" type="text" class="validate">
+                <label for="client_name">Cliente</label>
+            </div>
+
+            <!-- Observação -->
+            <div class="input-field col s6">
+                <textarea id="observation" class="materialize-textarea validate"></textarea>
+                <label for="observation">Observação</label>
+            </div>
+
+            <!-- Entrega -->
+            <p class="col s12 mb-2 delivery">
+                <label>
+                    <input id="delivery" type="checkbox" checked="checked" />
+                    <span>Entrega?</span>
+                </label>
+            </p>
+
+            <!-- Botão de Confirmação -->
+            <div class="input-field col s12 mb-2">
+                <a class="btn waves-effect waves-light col s12 modal-trigger" href="#confirmationModal">Confirmar Pedido
+                    <i class="material-icons right"></i>
+                </a>
+            </div>
+
+        </div>
     </div>
 
+</div>
 
-    <div id="confirmationModal" class="modal">
-        <div class="modal-content">
-            <h4>Deseja confirmar o pedido?</h4>
-            <p>O pedido será entregue para o preparo!</p>
-        </div>
-        <div class="modal-footer">
-            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
-            <a href="#!" class="modal-close waves-effect waves-green btn-flat" onclick="createOrder()">Enviar</a>
-        </div>
+<!-- Modal de Confirmação -->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <h4>Deseja confirmar o pedido?</h4>
+        <p>O pedido será entregue para o preparo!</p>
     </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat" onclick="createOrder()">Enviar</a>
+    </div>
+</div>
 
+<!-- (códigos posteriores) -->
 
-    <script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('.modal');
+        var instances = M.Modal.init(elems);
 
-        document.addEventListener('DOMContentLoaded', function () {
-            var elems = document.querySelectorAll('.modal');
-            var instances = M.Modal.init(elems);
+        var selectElem = document.getElementById('item_select');
+        var quantitiesContainer = document.getElementById('quantities_container');
+        var quantitiesRow = document.getElementById('quantities_row');
 
-            // var selectElems = document.querySelectorAll('select');
-            // var selectInstances = M.FormSelect.init(selectElems);
+        selectElem.addEventListener('change', function () {
+            // Manter as quantidades existentes
+            var existingQuantities = {};
+
+            $("input[id^='quantity_']").each(function () {
+                existingQuantities[this.id] = $(this).val();
+            });
+
+            // Limpar conteúdo anterior
+            quantitiesRow.innerHTML = '';
+
+            for (var i = 0; i < selectElem.selectedOptions.length; i++) {
+                var option = selectElem.selectedOptions[i];
+                var quantityInput = document.createElement('div');
+                quantityInput.className = 'col s3'; // Alterei de s4 para s3 para reduzir o tamanho
+                quantityInput.innerHTML = `
+                    <input id="quantity_${option.value}" type="number" class="validate" min="1" value="1">
+                    <label for="quantity_${option.value}">Qtd. ${option.text}</label>`;
+                quantitiesRow.appendChild(quantityInput);
+            }
+
+            // Exibir ou ocultar os campos de quantidade com base na seleção
+            quantitiesContainer.style.display = selectElem.value.length > 0 ? 'block' : 'none';
         });
-
+    });
 
         document.addEventListener('DOMContentLoaded', function () {
             var elems = document.querySelectorAll('select');
             var instances = M.FormSelect.init(elems);
         });
 
-        function createOrder(){
-            //Falta adicionar a quantidade de cada item
+        function createOrder() {
             let attendant = $("#attendant_name").val();
             let client_name = $("#client_name").val();
             let observation = $("#observation").val();
             let delivery = $("#delivery").prop("checked");
 
-            // Obter itens selecionados
-            let selectedItems = [];
+            let selectedItems = {};
             $("select option:selected").each(function () {
-                selectedItems.push($(this).text()); // Modificado para pegar o texto do item
+                let itemId = $(this).val();
+                let quantity = $(`#quantity_${itemId}`).val();
+                selectedItems[$(this).text()] = { quantity: quantity };
             });
-            
+
             let order = {
                 attendant: attendant,
                 client_name: client_name,
                 observation: observation,
                 delivery: delivery,
                 items: selectedItems
-            }
+            };
 
             $.ajax({
                 url: "http://localhost:8080/api/orders",
