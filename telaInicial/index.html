@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
+    <link rel="stylesheet" href="inicio.css">
+    <script src="../js/materialize.min.js"></script>
+    <title>Início</title>
+</head>
+
+<body>
+
+    <div class="page">
+
+        <div class="card">
+
+            <button id="novoPedido" class="waves-effect waves-light btn button" type="button">Cadastrar Pedido</button>
+
+            <button id="pedidosAberto" class="waves-effect waves-light btn button" type="button">Visualizar Pedidos Abertos</button>
+
+            <button id="todosPedidos" class="waves-effect waves-light btn button" type="button">Visualizar Todos os Pedidos</button>
+
+        </div>
+
+    </div>
+
+
+    <script>
+        var novoPedido = document.getElementById('novoPedido');
+        var pedidosAbertos = document.getElementById('pedidosAberto');
+        var todosPedidos = document.getElementById('todosPedidos');
+
+        function alerta(){
+            alert('Em desenvolvimento');
+        }
+
+        novoPedido.addEventListener("click", alerta);
+        pedidosAbertos.addEventListener("click", alerta);
+        todosPedidos.addEventListener("click", alerta);
+
+    </script>
+    
+</body>
+
+
+</html>

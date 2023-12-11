@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="login.css">
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <title>GIM SYSTEM</title>
+</head>
+
+<body>
+
+    <div class="page">
+
+        <form class="form ">
+            <div class="column">
+                <div class="input-field col s6">
+                    <input id="first_name2" type="text" class="validate" placeholder="Digite seu usuário">
+                    <label class="active" for="first_name2">Usuário</label>
+                </div>
+
+                <div class="input-field col s6">
+                    <input id="password" type="text" class="validate" placeholder="Digite sua senha">
+                    <label class="active" for="first_name2">Senha</label>
+                </div>
+
+                <button id="submit" class="waves-effect waves-light btn tamanho" type="button">ACESSAR</button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <script>
+        var acessar = document.getElementById('submit');
+
+        acessar.addEventListener("click", function(){
+            var username = document.getElementById('first_name2').value;
+            var senha = document.getElementById('password').value;
+
+            if(username == 'admin' && senha == 'admin'){
+                window.location.href = 'telaInicial/index.html'
+            } else {
+                alert('Usuário ou Senha incorretos')
+            }
+        })
+
+    </script>
+    
+</body>
+
+</html>
