@@ -39,13 +39,16 @@
             var username = document.getElementById('first_name2').value;
             var senha = document.getElementById('password').value;
 
-            if(username == 'admin' && senha == 'admin'){
-                window.location.href = 'telaInicial/index.html'
-            } else {
+            if(username === 'balcao' && senha === 'balcao'){
+                window.location.href = 'balcao/balcao.html'
+            } 
+            else if(username === 'cozinha' && senha === 'cozinha'){
+                window.location.href = 'padeiro/padeiro.html'
+            }
+            else {
                 alert('Usuário ou Senha incorretos')
             }
         })
-
     </script>
     
 </body>
