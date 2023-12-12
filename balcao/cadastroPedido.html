@@ -23,12 +23,6 @@
     <div class="formulario">
         <div class="row">
 
-            <!-- Atendente
-            <div class="input-field col s12">
-                <input id="attendant_name" type="text" class="validate">
-                <label for="attendant_name">Atendente</label>
-            </div> -->
-
             <!-- Itens do pedido -->
             <div class="input-field col s12">
                 <select id="item_select" multiple>
@@ -38,7 +32,7 @@
                     <option value="4">Salgado</option>
                     <option value="4">Pizza</option>
                 </select>
-                <label>Selecione os itens do pedido</label>
+                <label>Itens</label>
             </div>
 
             <!-- Lista de Quantidades (inicialmente oculto) -->
@@ -49,21 +43,22 @@
             </div>
 
             <!-- Cliente -->
-            <div class="input-field col s6">
+            <div class="input-field col s12">
                 <input id="client_name" type="text" class="validate">
                 <label for="client_name">Cliente</label>
             </div>
 
             <!-- Observação -->
-            <div class="input-field col s6">
-                <textarea id="observation" class="materialize-textarea validate"></textarea>
+            <div class="col s12">
                 <label for="observation">Observação</label>
+                <textarea id="observation" rows="10"></textarea>
+                
             </div>
 
             <!-- Entrega -->
             <p class="col s12 mb-2 delivery">
                 <label>
-                    <input id="delivery" type="checkbox" checked="checked" />
+                    <input id="delivery" type="checkbox" />
                     <span>Entrega?</span>
                 </label>
             </p>

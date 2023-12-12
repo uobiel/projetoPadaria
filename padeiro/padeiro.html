@@ -14,6 +14,9 @@
         .uppercase {
             text-transform: uppercase;
         }
+        .float-rigth {
+            float: right;
+        }
     </style>
     <script>
         function reload() {
@@ -45,7 +48,7 @@
     </script>
 </head>
 
-<body>
+<body class="container-fluid">
     <div class="row">
         <div class="col s4" id="cards">
 
@@ -56,15 +59,14 @@
                 <div id="total">
 
                 </div>
-
-                <div class="row">
                     <div class="col s12">
                         <table class="striped">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Itens</th>
-                                    <th>Cliente</th>
+                                    <th>Observação</th>
+                                    <th>Data</th>
                                 </tr>
                             </thead>
 
@@ -75,10 +77,9 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!--JavaScript at end of body for optimized loading-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </div>
+    <!--JavaScript at end of body for optimized loading-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 
 </html>
@@ -91,7 +92,7 @@
             <div class="card">
                 <div class="card-content">
                     <span class="card-title activator grey-text text-darken-4"><a class="btn waves-block"><b
-                                style="font-size: 30px;">#<number></b></a></span>
+                                style="font-size: 30px;">#<number> <span style="font-size: 10px;" class="float-rigth"><date><span></b></a></span>
                     <table style="font-size: 15px;">
                         <tbody>
                          <items>
@@ -103,7 +104,7 @@
         const itemsTemplate = `
                                 <tr>
                                     <td><name></td>
-                                    <td><quantity></td>
+                                    <td width="10%"><quantity></td>
                                 </tr>`;
 
         let newHtmlCards = "";
@@ -114,7 +115,7 @@
                 itemsTable = `${itemsTable} ${itemsTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`;
             });
 
-            newHtmlCards = `${newHtmlCards} ${cardTemplate.replace("<items>", itemsTable).replace("<number>", card.number)}`;
+            newHtmlCards = `${newHtmlCards} ${cardTemplate.replace("<items>", itemsTable).replace("<number>", card.number).replace("<date>", `${(new Date(card.createdAt)).toLocaleDateString('en-GB')} - ${(new Date(card.createdAt)).toLocaleTimeString('en-GB')}`)}`;
 
             if (card.observation) {
                 newHtmlCards = newHtmlCards.replace("<observation>", `<br> <div class="uppercase red-text">${card.observation}</div>`)
@@ -132,7 +133,8 @@
         const tableTemplate = `<tr>
                                     <td>#<number></td>
                                     <td><items></td>
-                                    <td><custumer></td>
+                                    <td><observation></td>
+                                    <td style="font-size: 10px;"><date></td>
                                 </tr>`
 
         let bodyTable = "";
@@ -146,7 +148,7 @@
             line.items.forEach(item => {
                 itemsBody = `${itemsBody} ${itemsTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`
             })
-            bodyTable = `${bodyTable} ${tableTemplate.replace("<number>", line.number).replace("<custumer>", line.custumer).replace("<items>", itemsBody)}`;
+            bodyTable = `${bodyTable} ${tableTemplate.replace("<number>", line.number).replace("<observation>", line.observation == "" ? "-" : `<span class="red-text">${line.observation}</span>`).replace("<items>", itemsBody).replace("<date>", `${(new Date(line.createdAt)).toLocaleDateString('en-GB')} - ${(new Date(line.createdAt)).toLocaleTimeString('en-GB')}`)}`;
         });
         $("#tableBody").html(bodyTable);
 

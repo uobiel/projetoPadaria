@@ -11,6 +11,14 @@
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
+        .uppercase {
+            text-transform: uppercase;
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
+
         .float-rigth {
             float: right;
         }
@@ -123,23 +131,23 @@
     </style>
     <script>
         function reload() {
-        $.ajax({
-            url: "http://localhost:8080/api/orders",
-            crossDomain: true,
-            dataType: 'json',
-            success: function (data) {
-                generateTable(data.filter((order) => { return order.status == "opened" }), "opened");
-                data.sort((a,b) => {return new Date(b.updatedAt) - new Date(a.updatedAt) })
-                generateTable(data.filter((order) => { return order.status == "closed" }), "closed");
-                generateTable(data.filter((order) => { return order.status == "canceled" }), "canceled");
-                generateTable(data, "all");
+            $.ajax({
+                url: "http://localhost:8080/api/orders",
+                crossDomain: true,
+                dataType: 'json',
+                success: function (data) {
+                    generateTable(data.filter((order) => { return order.status == "opened" }), "opened");
+                    data.sort((a, b) => { return new Date(b.updatedAt) - new Date(a.updatedAt) })
+                    generateTable(data.filter((order) => { return order.status == "closed" }), "closed");
+                    generateTable(data.filter((order) => { return order.status == "canceled" }), "canceled");
+                    generateTable(data, "all");
 
 
-            },
-            type: 'GET'
-        });
-    }
-    reload();
+                },
+                type: 'GET'
+            });
+        }
+        reload();
     </script>
 </head>
 
@@ -174,6 +182,36 @@
             <div id="canceled" class="col s12">Cancelados</div>
         </div>
     </div>
+
+    <!-- Modal Structure -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <div class="col s12">
+                <h4 class="header"> Pedido #<span id="infoModalTitle"></span></h4>
+                <div class="card horizontal">
+                  <div class="card-image">
+                    <img src="https://outvio.com/static/1ab5276d75fcf739b75e969db9ba6010/a009d/cl3oal8w6000c79570tgf4k1k.webp">
+                  </div>
+                  <div class="card-stacked">
+                    <div class="card-content">
+                        <b>Itens: </b> <p id="infoModalItems"></p>
+                        <p>
+                        <b>Data: </b> <p id="infoModalDate"></p>
+                        <p>
+                        <b>Cliente: </b> <p id="infoModalCustumer"></p>
+                        <p>
+                        <b>Observação: </b><p class="red-text" id="infoModalObservation"></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+           
+           
+        </div>
+        <div class="modal-footer">
+            <a class="modal-close waves-effect waves-green btn-flat">Ok</a>
+        </div>
+    </div>
     <!--JavaScript at end of body for optimized loading-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
@@ -185,6 +223,8 @@
     $(document).ready(function () {
         $('.tabs').tabs();
         $('.tooltipped').tooltip();
+        $('.modal').modal();
+
     });
 
     function cancelOrder(id) {
@@ -211,6 +251,37 @@
         });
     }
 
+    function openOrder(id) {
+        $.ajax({
+            url: `http://localhost:8080/api/orders/${id}`,
+            crossDomain: true,
+            dataType: 'json',
+            success: function (order) {
+
+                const itemsTemplate = `
+        <div class="chip" style="font-size: 10px;">
+            <name>: <quantity>
+        </div>`
+        let itemsBody = "";
+            
+            order.items.forEach(item => {
+                itemsBody = `${itemsBody} ${itemsTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`
+            });
+
+                $("#infoModalTitle").html(order.number);
+                $("#infoModalDate").html(`${(new Date(order.createdAt)).toLocaleDateString('en-GB')} - ${(new Date(order.createdAt)).toLocaleTimeString('en-GB')}`);
+                $("#infoModalCustumer").html(order.custumer);
+                $("#infoModalItems").html(itemsBody);
+                $("#infoModalObservation").html(order.observation.trim() == ""? "----------":order.observation);
+                $("#infoModal").modal("open");
+
+            },
+            type: 'GET'
+        });
+
+
+    }
+
     function generateTable(orders, tabId) {
         let table = `
         <table>
@@ -220,7 +291,7 @@
               <th>Itens</th>
               <th>Cliente</th>
               <th>Observação</th>
-              <th>Ações</th>
+              <th width="15%">Ações</th>
           </tr>
         </thead>
 
@@ -234,7 +305,7 @@
                                     <td>#<number></td>
                                     <td><items></td>
                                     <td><custumer></td>
-                                    <td><observation></td>`;
+                                    <td class="uppercase"><observation></td>`;
 
         const itemsTemplate = `
         <div class="chip">
@@ -248,20 +319,19 @@
                 itemsBody = `${itemsBody} ${itemsTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`
             });
 
-            bodyTable = `${bodyTable} ${tableTemplate.replace("<number>", line.number).replace("<observation>", line.observation == "" ? "-" : line.observation).replace("<custumer>", line.custumer).replace("<items>", itemsBody)}`;
+            bodyTable = `${bodyTable} ${tableTemplate.replace("<number>", line.number).replace("<observation>", line.observation == "" ? "-" : `<span class="red-text">${line.observation}</span>`).replace("<custumer>", line.custumer).replace("<items>", itemsBody)}`;
             bodyTable = `${bodyTable} 
                                 <td>  
-                                        <a class="btn-floating waves-effect waves-light" data-tooltip="Finalizar" onclick="finishOrder('${line.id}')"><i class="material-icons">check_circle</i></a>
-                                        <a class="btn-floating waves-effect waves-light blue"  data-tooltip="Visualizar" onclick="openOrder(${line})"><i class="material-icons">info</i></a>
-                                        <a class="btn-floating waves-effect waves-light red" data-tooltip="Cancelar" onclick="cancelOrder('${line.id}')"><i class="material-icons">close</i></a>
+                                        <a class="btn-floating waves-effect waves-light btn-small ${['canceled', 'closed'].includes(line.status) ? "hidden" : ""}" data-tooltip="Finalizar" onclick="finishOrder('${line.id}')"><i class="material-icons">check_circle</i></a>
+                                        <a class="btn-floating waves-effect waves-light blue btn-small"  data-tooltip="Visualizar" onclick="openOrder('${line.id}')"><i class="material-icons">info</i></a>
+                                        <a class="btn-floating waves-effect waves-light red btn-small ${['canceled', 'closed'].includes(line.status) ? "hidden" : ""}" data-tooltip="Cancelar" onclick="cancelOrder('${line.id}')"><i class="material-icons">close</i></a>
                                         
                                         </td>
-                                </tr>`    
+                                </tr>`
         });
 
         table = table.replace("<orders>", bodyTable);
         $(`#${tabId}`).html(table);
-
 
     }
 
