@@ -5,10 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/materialize.min.css">
-    <script src="../js/materialize.min.js"></script>
     <link rel="stylesheet" href="balcao.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 
     <title>Novo Pedido</title>
 </head>
@@ -98,19 +96,21 @@
 </div>
 
 <!-- (códigos posteriores) -->
-
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="../js/materialize.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('.modal');
-        var instances = M.Modal.init(elems);
 
-        var selectElem = document.getElementById('item_select');
-        var quantitiesContainer = document.getElementById('quantities_container');
-        var quantitiesRow = document.getElementById('quantities_row');
+    $(document).ready(() => {
+        $('.modal').modal();
+
+
+        let selectElem = document.getElementById('item_select');
+        let quantitiesContainer = document.getElementById('quantities_container');
+        let quantitiesRow = document.getElementById('quantities_row');
 
         selectElem.addEventListener('change', function () {
             // Manter as quantidades existentes
-            var existingQuantities = {};
+            let existingQuantities = {};
 
             $("input[id^='quantity_']").each(function () {
                 existingQuantities[this.id] = $(this).val();
@@ -119,9 +119,9 @@
             // Limpar conteúdo anterior
             quantitiesRow.innerHTML = '';
 
-            for (var i = 0; i < selectElem.selectedOptions.length; i++) {
-                var option = selectElem.selectedOptions[i];
-                var quantityInput = document.createElement('div');
+            for (let i = 0; i < selectElem.selectedOptions.length; i++) {
+                let option = selectElem.selectedOptions[i];
+                let quantityInput = document.createElement('div');
                 quantityInput.className = 'col s3'; // Alterei de s4 para s3 para reduzir o tamanho
                 quantityInput.innerHTML = `
                     <input id="quantity_${option.value}" type="number" class="validate" min="1" value="1">
@@ -132,62 +132,66 @@
             // Exibir ou ocultar os campos de quantidade com base na seleção
             quantitiesContainer.style.display = selectElem.value.length > 0 ? 'block' : 'none';
         });
-    });
 
-    document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('select');
-        var instances = M.FormSelect.init(elems);
+        let elems2 = document.querySelectorAll('select');
+        let instances2 = M.FormSelect.init(elems2);
+
+
+    
     });
 
     function createOrder() {
-        // let attendant = $("#attendant_name").val();
-        let client_name = $("#client_name").val();
-        let observation = $("#observation").val();
-        let delivery = $("#delivery").prop("checked");
+            // let attendant = $("#attendant_name").val();
+            let client_name = $("#client_name").val();
+            let observation = $("#observation").val();
+            let delivery = $("#delivery").prop("checked");
 
-        let selectedItems = [];
-        $("select option:selected").each(function () {
-            const itemId = $(this).val();
-            const quantity = $(`#quantity_${itemId}`).val();
-            const name = $(this).text();
-            selectedItems.push({ name: name, quantity: quantity });
-        });
+            let selectedItems = [];
+            $("select option:selected").each(function () {
+                const itemId = $(this).val();
+                const quantity = $(`#quantity_${itemId}`).val();
+                const name = $(this).text();
+                selectedItems.push({ name: name, quantity: Number(quantity) });
+            });
 
-        let order = {
-            // attendant: attendant,
-            custumer: client_name,
-            observation: observation,
-            delivery: delivery,
-            items: selectedItems
-        };
+            let order = {
+                // attendant: attendant,
+                custumer: client_name,
+                observation: observation,
+                delivery: delivery,
+                items: selectedItems
+            };
 
-        $.ajax({
-            url: "http://localhost:8080/api/orders",
-            crossDomain: true,
-            dataType: 'json',
-            data: order,
-            success: function (data) {
-                $("#successModal").modal('open');
-            },
-            type: 'POST'
-        });
-    }
-
-    function goTo(page) {
-
-        switch (page) {
-            case "listagemPedidos":
-                page = "balcao/listagemPedidos.html"
-                break;
-
-            default:
-                break;
+            $.ajax({
+                url: "http://localhost:8080/api/orders",
+                crossDomain: true,
+                dataType: 'json',
+                data: order,
+                success: function (data) {
+                    $("#successModal").modal("open");
+                },
+                type: 'POST'
+            });
         }
 
-        window.location.href = page;
-    }
+
+        function goTo(page) {
+
+            switch (page) {
+                case "listagemPedidos":
+                    page = "listagemPedidos.html"
+                    break;
+
+                default:
+                    break;
+            }
+
+            window.location.href = page;
+        }
+
 
 </script>
+
 
 </body>
 

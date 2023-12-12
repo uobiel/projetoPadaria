@@ -11,6 +11,10 @@
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
+        .float-rigth {
+            float: right;
+        }
+
         .tabs .tab a {
             color: #000;
         }
@@ -128,7 +132,7 @@
                 generateTable(data.filter((order) => { return order.status == "canceled" }), "canceled");
                 generateTable(data, "all");
 
-                
+
             },
             type: 'GET'
         });
@@ -139,13 +143,20 @@
     <div class="row">
         <div class="col s12">
             <div class="three">
-                <h1>Pedidos</h1>
+                <h1>Pedidos
+                    <a class="btn waves-effect waves-light float-rigth" href="balcao.html">
+                        <i class="material-icons right">add_circle</i>
+                        Criar Pedido
+                    </a>
+                </h1>
+
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col s12">
             <div class="col s12">
+
                 <ul class="tabs">
                     <li class="tab col s3"><a href="#opened" class="active">Abertos</a></li>
                     <li class="tab col s3"><a href="#all">Todos</a></li>
