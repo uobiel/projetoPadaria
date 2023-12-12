@@ -18,7 +18,7 @@
     <script>
         function reload() {
             $.ajax({
-                url: "http://localhost:8080/api/orders",
+                url: "http://localhost:8080/api/orders/opened",
                 crossDomain: true,
                 dataType: 'json',
                 success: function (data) {
@@ -84,7 +84,7 @@
 </html>
 
 <script>
-    setInterval(reload, 30000);
+    setInterval(reload, 5000);
     function loadCards(cards) {
         const mainCards = cards.slice(0, 3);
         const cardTemplate = `

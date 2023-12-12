@@ -122,12 +122,14 @@
         }
     </style>
     <script>
+        function reload() {
         $.ajax({
             url: "http://localhost:8080/api/orders",
             crossDomain: true,
             dataType: 'json',
             success: function (data) {
                 generateTable(data.filter((order) => { return order.status == "opened" }), "opened");
+                data.sort((a,b) => {return new Date(b.updatedAt) - new Date(a.updatedAt) })
                 generateTable(data.filter((order) => { return order.status == "closed" }), "closed");
                 generateTable(data.filter((order) => { return order.status == "canceled" }), "canceled");
                 generateTable(data, "all");
@@ -136,6 +138,8 @@
             },
             type: 'GET'
         });
+    }
+    reload();
     </script>
 </head>
 
@@ -180,7 +184,32 @@
 <script>
     $(document).ready(function () {
         $('.tabs').tabs();
+        $('.tooltipped').tooltip();
     });
+
+    function cancelOrder(id) {
+        $.ajax({
+            url: `http://localhost:8080/api/orders/cancel/${id}`,
+            crossDomain: true,
+            dataType: 'json',
+            success: function (data) {
+                reload();
+            },
+            type: 'PUT'
+        });
+    }
+
+    function finishOrder(id) {
+        $.ajax({
+            url: `http://localhost:8080/api/orders/finish/${id}`,
+            crossDomain: true,
+            dataType: 'json',
+            success: function (data) {
+                reload();
+            },
+            type: 'PUT'
+        });
+    }
 
     function generateTable(orders, tabId) {
         let table = `
@@ -205,14 +234,7 @@
                                     <td>#<number></td>
                                     <td><items></td>
                                     <td><custumer></td>
-                                    <td><observation></td>
-                                    <td>  
-                                        <a class="btn-floating waves-effect waves-light"><i class="material-icons">add</i></a>
-                                        <a class="btn-floating waves-effect waves-light"><i class="material-icons">edit</i></a>
-                                        <a class="btn-floating waves-effect waves-light red"><i class="material-icons">close</i></a>
-                                        
-                                        </td>
-                                </tr>`;
+                                    <td><observation></td>`;
 
         const itemsTemplate = `
         <div class="chip">
@@ -226,7 +248,15 @@
                 itemsBody = `${itemsBody} ${itemsTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`
             });
 
-            bodyTable = `${bodyTable} ${tableTemplate.replace("<number>", line.number).replace("<observation>", line.observation == "" ? "-" : line.observation).replace("<custumer>", line.custumer).replace("<items>", itemsBody)}`
+            bodyTable = `${bodyTable} ${tableTemplate.replace("<number>", line.number).replace("<observation>", line.observation == "" ? "-" : line.observation).replace("<custumer>", line.custumer).replace("<items>", itemsBody)}`;
+            bodyTable = `${bodyTable} 
+                                <td>  
+                                        <a class="btn-floating waves-effect waves-light" data-tooltip="Finalizar" onclick="finishOrder('${line.id}')"><i class="material-icons">check_circle</i></a>
+                                        <a class="btn-floating waves-effect waves-light blue"  data-tooltip="Visualizar" onclick="openOrder(${line})"><i class="material-icons">info</i></a>
+                                        <a class="btn-floating waves-effect waves-light red" data-tooltip="Cancelar" onclick="cancelOrder('${line.id}')"><i class="material-icons">close</i></a>
+                                        
+                                        </td>
+                                </tr>`    
         });
 
         table = table.replace("<orders>", bodyTable);
