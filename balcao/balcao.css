@@ -48,3 +48,9 @@ body {
     top: 0;
     margin: 10px;
 }
+
+@media (max-width: 601px) {
+    .formulario {
+        width: 100%;
+    }
+}
