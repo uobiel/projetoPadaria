@@ -1,0 +1,180 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.page {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: whitesmoke;
+}
+
+.formulario {
+    width: 40%;
+}
+
+.delivery {
+    margin-bottom: 20px;
+}
+
+
+#confirmationModal {
+    max-width: 40%;
+    width: auto;
+    margin: 10% auto;
+    border-radius: 10px;
+}
+
+#confirmationModal .modal-content {
+    font-family: 'Montserrat', sans-serif;
+    padding: 24px;
+}
+
+#confirmationModal .modal-footer {
+    font-family: 'Montserrat', sans-serif;
+    padding: 8px 24px;
+}
+
+.back-button {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 10px;
+}
+
+@media (max-width: 601px) {
+    .formulario {
+        width: 100%;
+    }
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.float-rigth {
+    float: right;
+}
+
+.tabs .tab a {
+    color: #000;
+}
+
+/*Black color to the text*/
+
+.tabs .tab a:hover {
+    background-color: #eee;
+    color: #009688;
+}
+
+/*Text color on hover*/
+
+.tabs .tab a.active:focus {
+    background-color: #009688;
+    color: #eee;
+}
+
+/*Background and text color when a tab is active*/
+
+.tabs .tab a.active {
+    background-color: #009688;
+    color: #eee;
+}
+
+/*Background and text color when a tab is active*/
+
+.tabs .indicator {
+    background-color: #b2dfdb;
+}
+
+/*Color of underline*/
+
+
+
+/* === BASE HEADING === */
+
+h1 {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    font-family: "Raleway", sans-serif;
+    font-weight: 300;
+    font-size: 40px;
+    color: #009688;
+    -webkit-transition: all 0.4s ease 0s;
+    -o-transition: all 0.4s ease 0s;
+    transition: all 0.4s ease 0s;
+}
+
+h1 span {
+    display: block;
+    font-size: 0.5em;
+    line-height: 1.3;
+}
+
+h1 em {
+    font-style: normal;
+    font-weight: 600;
+}
+
+
+/* === HEADING STYLE #3 === */
+.three h1 {
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.5em;
+    padding-bottom: 15px;
+    position: relative;
+}
+
+.three h1:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 5px;
+    width: 55px;
+    background-color: #009688;
+}
+
+.three h1:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 2px;
+    height: 1px;
+    width: 95%;
+    max-width: 255px;
+    background-color: #009688;
+}
+
+/* === HEADING STYLE #4 === */
+
+/* ------- Helper Styles -------------*/
+
+div.three {
+    position: relative;
+    background: #f8f8f8;
+    width: 100%;
+    padding: 2em;
+    margin: 5px auto;
+    border: 3px solid rgba(0, 0, 0, 0.08);
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }

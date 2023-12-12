@@ -5,130 +5,14 @@
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../css/materialize.min.css">
+    <link rel="stylesheet" href="../css/main.css">
     <script src="../js/materialize.min.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-        .uppercase {
-            text-transform: uppercase;
-        }
 
-        .hidden {
-            visibility: hidden;
-        }
-
-        .float-rigth {
-            float: right;
-        }
-
-        .tabs .tab a {
-            color: #000;
-        }
-
-        /*Black color to the text*/
-
-        .tabs .tab a:hover {
-            background-color: #eee;
-            color: #009688;
-        }
-
-        /*Text color on hover*/
-
-        .tabs .tab a.active:focus {
-            background-color: #009688;
-            color: #eee;
-        }
-
-        /*Background and text color when a tab is active*/
-
-        .tabs .tab a.active {
-            background-color: #009688;
-            color: #eee;
-        }
-
-        /*Background and text color when a tab is active*/
-
-        .tabs .indicator {
-            background-color: #b2dfdb;
-        }
-
-        /*Color of underline*/
-
-
-
-        /* === BASE HEADING === */
-
-        h1 {
-            position: relative;
-            padding: 0;
-            margin: 0;
-            font-family: "Raleway", sans-serif;
-            font-weight: 300;
-            font-size: 40px;
-            color: #009688;
-            -webkit-transition: all 0.4s ease 0s;
-            -o-transition: all 0.4s ease 0s;
-            transition: all 0.4s ease 0s;
-        }
-
-        h1 span {
-            display: block;
-            font-size: 0.5em;
-            line-height: 1.3;
-        }
-
-        h1 em {
-            font-style: normal;
-            font-weight: 600;
-        }
-
-
-        /* === HEADING STYLE #3 === */
-        .three h1 {
-            font-size: 28px;
-            font-weight: 500;
-            letter-spacing: 0;
-            line-height: 1.5em;
-            padding-bottom: 15px;
-            position: relative;
-        }
-
-        .three h1:before {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            height: 5px;
-            width: 55px;
-            background-color: #009688;
-        }
-
-        .three h1:after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 2px;
-            height: 1px;
-            width: 95%;
-            max-width: 255px;
-            background-color: #009688;
-        }
-
-        /* === HEADING STYLE #4 === */
-
-        /* ------- Helper Styles -------------*/
-
-        div.three {
-            position: relative;
-            background: #f8f8f8;
-            width: 100%;
-            padding: 2em;
-            margin: 5px auto;
-            border: 3px solid rgba(0, 0, 0, 0.08);
-        }
-    </style>
     <script>
         function reload() {
             $.ajax({
@@ -189,24 +73,29 @@
             <div class="col s12">
                 <h4 class="header"> Pedido #<span id="infoModalTitle"></span></h4>
                 <div class="card horizontal">
-                  <div class="card-image">
-                    <img src="https://outvio.com/static/1ab5276d75fcf739b75e969db9ba6010/a009d/cl3oal8w6000c79570tgf4k1k.webp">
-                  </div>
-                  <div class="card-stacked">
-                    <div class="card-content">
-                        <b>Itens: </b> <p id="infoModalItems"></p>
-                        <p>
-                        <b>Data: </b> <p id="infoModalDate"></p>
-                        <p>
-                        <b>Cliente: </b> <p id="infoModalCustumer"></p>
-                        <p>
-                        <b>Observação: </b><p class="red-text" id="infoModalObservation"></p>
+                    <div class="card-image">
+                        <img
+                            src="https://outvio.com/static/1ab5276d75fcf739b75e969db9ba6010/a009d/cl3oal8w6000c79570tgf4k1k.webp">
                     </div>
-                  </div>
+                    <div class="card-stacked">
+                        <div class="card-content">
+                            <b>Itens: </b>
+                            <p id="infoModalItems"></p>
+                            <p>
+                                <b>Data: </b>
+                            <p id="infoModalDate"></p>
+                            <p>
+                                <b>Cliente: </b>
+                            <p id="infoModalCustumer"></p>
+                            <p>
+                                <b>Observação: </b>
+                            <p class="red-text" id="infoModalObservation"></p>
+                        </div>
+                    </div>
                 </div>
-              </div>
-           
-           
+            </div>
+
+
         </div>
         <div class="modal-footer">
             <a class="modal-close waves-effect waves-green btn-flat">Ok</a>
@@ -262,17 +151,17 @@
         <div class="chip" style="font-size: 10px;">
             <name>: <quantity>
         </div>`
-        let itemsBody = "";
-            
-            order.items.forEach(item => {
-                itemsBody = `${itemsBody} ${itemsTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`
-            });
+                let itemsBody = "";
+
+                order.items.forEach(item => {
+                    itemsBody = `${itemsBody} ${itemsTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`
+                });
 
                 $("#infoModalTitle").html(order.number);
                 $("#infoModalDate").html(`${(new Date(order.createdAt)).toLocaleDateString('en-GB')} - ${(new Date(order.createdAt)).toLocaleTimeString('en-GB')}`);
                 $("#infoModalCustumer").html(order.custumer);
                 $("#infoModalItems").html(itemsBody);
-                $("#infoModalObservation").html(order.observation.trim() == ""? "----------":order.observation);
+                $("#infoModalObservation").html(order.observation.trim() == "" ? "----------" : order.observation);
                 $("#infoModal").modal("open");
 
             },
@@ -283,7 +172,9 @@
     }
 
     function generateTable(orders, tabId) {
-        let table = `
+        let table = "";
+        if (orders.length) {
+            table = `
         <table>
         <thead>
           <tr>
@@ -301,26 +192,27 @@
       </table>
         `;
 
-        const tableTemplate = `<tr>
+
+            const tableTemplate = `<tr>
                                     <td>#<number></td>
                                     <td><items></td>
                                     <td><custumer></td>
                                     <td class="uppercase"><observation></td>`;
 
-        const itemsTemplate = `
+            const itemsTemplate = `
         <div class="chip">
             <name>: <quantity>
         </div>`
 
-        let bodyTable = "";
-        orders.forEach(line => {
-            let itemsBody = "";
-            line.items.forEach(item => {
-                itemsBody = `${itemsBody} ${itemsTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`
-            });
+            let bodyTable = "";
+            orders.forEach(line => {
+                let itemsBody = "";
+                line.items.forEach(item => {
+                    itemsBody = `${itemsBody} ${itemsTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`
+                });
 
-            bodyTable = `${bodyTable} ${tableTemplate.replace("<number>", line.number).replace("<observation>", line.observation == "" ? "-" : `<span class="red-text">${line.observation}</span>`).replace("<custumer>", line.custumer).replace("<items>", itemsBody)}`;
-            bodyTable = `${bodyTable} 
+                bodyTable = `${bodyTable} ${tableTemplate.replace("<number>", line.number).replace("<observation>", line.observation == "" ? "-" : `<span class="red-text">${line.observation}</span>`).replace("<custumer>", line.custumer).replace("<items>", itemsBody)}`;
+                bodyTable = `${bodyTable} 
                                 <td>  
                                         <a class="btn-floating waves-effect waves-light btn-small ${['canceled', 'closed'].includes(line.status) ? "hidden" : ""}" data-tooltip="Finalizar" onclick="finishOrder('${line.id}')"><i class="material-icons">check_circle</i></a>
                                         <a class="btn-floating waves-effect waves-light blue btn-small"  data-tooltip="Visualizar" onclick="openOrder('${line.id}')"><i class="material-icons">info</i></a>
@@ -328,10 +220,19 @@
                                         
                                         </td>
                                 </tr>`
-        });
+            });
 
-        table = table.replace("<orders>", bodyTable);
+            table = table.replace("<orders>", bodyTable);
+        }
+        else {
+            table = ` <div class="card-panel">
+                        <span class="text-darken-2"><h6>Nenhum pedido encontrado...</h6></span>
+                    </div>`
+        }
+
         $(`#${tabId}`).html(table);
+
+
 
     }
 

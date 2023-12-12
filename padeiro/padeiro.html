@@ -5,19 +5,12 @@
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="../css/materialize.min.css">
+    <link rel="stylesheet" href="../css/main.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-        .uppercase {
-            text-transform: uppercase;
-        }
-        .float-rigth {
-            float: right;
-        }
-    </style>
     <script>
         function reload() {
             $.ajax({
@@ -50,17 +43,91 @@
 
 <body class="container-fluid">
     <div class="row">
+        <div class="three">
+            <h1>Pedidos Abertos</h1>
+        </div>
+        <div class="col s12" id="noOrdersScreen">
+
+            <div class="white-text card-panel teal">
+                <span class="text-darken-2">
+                    <h6>Nenhum pedido aberto...</h6>
+                </span>
+            </div>`
+            <img class="materialboxed center"
+                src="https://br.seaicons.com/wp-content/uploads/2017/03/green-clock-icon.png">
+        </div>
         <div class="col s4" id="cards">
-
-
         </div>
         <div class="col s8">
             <div class="row">
                 <div id="total">
 
                 </div>
-                    <div class="col s12">
-                        <table class="striped">
+                <div class="col s12" id="table">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--JavaScript at end of body for optimized loading-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+
+</html>
+
+<script>
+    setInterval(reload, 5000);
+    function loadCards(cards) {
+        const mainCards = cards.slice(0, 3);
+        if (mainCards.length) {
+            $("#noOrdersScreen").hide();
+            $("#cards").show();
+            const cardTemplate = `
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4"><a class="btn waves-block"><b
+                                style="font-size: 30px;">#<number> <span style="font-size: 10px;" class="float-rigth"><date><span></b></a></span>
+                  
+                         <items>
+                    <observation>
+                </div>
+            </div>`;
+            const itemsTemplate = `
+                               <span style="font-size: 15px;" class="chip uppercase"><b><name>: <quantity></b></span>`;
+
+            let newHtmlCards = "";
+
+            mainCards.forEach(card => {
+                let itemsTable = "";
+                card.items.forEach(item => {
+                    itemsTable = `${itemsTable} ${itemsTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`;
+                });
+
+                newHtmlCards = `${newHtmlCards} ${cardTemplate.replace("<items>", itemsTable).replace("<number>", card.number).replace("<date>", `${(new Date(card.createdAt)).toLocaleDateString('en-GB')} - ${(new Date(card.createdAt)).toLocaleTimeString('en-GB')}`)}`;
+
+                if (card.observation) {
+                    newHtmlCards = newHtmlCards.replace("<observation>", `<br><div class="uppercase red-text">OBS.: ${card.observation}</div>`)
+                }
+                else {
+                    newHtmlCards = newHtmlCards.replace("<observation>", "");
+                }
+            });
+
+            $("#cards").html(newHtmlCards);
+            $("#total").show();
+            $("#crads").show();
+        }
+        else {
+            $("#noOrdersScreen").show();
+            $("#cards").hide();
+            $("#total").hide();
+        }
+    }
+
+    function loadTable(lines) {
+        const lastLines = lines.slice(3, lines.length);
+        if (lastLines.length) {
+            $("#table").html(`  <table class="striped">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -73,89 +140,43 @@
                             <tbody id="tableBody">
 
                             </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-    </div>
-    <!--JavaScript at end of body for optimized loading-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-</body>
+                        </table>`);
 
-</html>
-
-<script>
-    setInterval(reload, 5000);
-    function loadCards(cards) {
-        const mainCards = cards.slice(0, 3);
-        const cardTemplate = `
-            <div class="card">
-                <div class="card-content">
-                    <span class="card-title activator grey-text text-darken-4"><a class="btn waves-block"><b
-                                style="font-size: 30px;">#<number> <span style="font-size: 10px;" class="float-rigth"><date><span></b></a></span>
-                    <table style="font-size: 15px;">
-                        <tbody>
-                         <items>
-                        </tbody>
-                    </table>
-                    <observation>
-                </div>
-            </div>`;
-        const itemsTemplate = `
-                                <tr>
-                                    <td><name></td>
-                                    <td width="10%"><quantity></td>
-                                </tr>`;
-
-        let newHtmlCards = "";
-
-        mainCards.forEach(card => {
-            let itemsTable = "";
-            card.items.forEach(item => {
-                itemsTable = `${itemsTable} ${itemsTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`;
-            });
-
-            newHtmlCards = `${newHtmlCards} ${cardTemplate.replace("<items>", itemsTable).replace("<number>", card.number).replace("<date>", `${(new Date(card.createdAt)).toLocaleDateString('en-GB')} - ${(new Date(card.createdAt)).toLocaleTimeString('en-GB')}`)}`;
-
-            if (card.observation) {
-                newHtmlCards = newHtmlCards.replace("<observation>", `<br> <div class="uppercase red-text">${card.observation}</div>`)
-            }
-            else {
-                newHtmlCards = newHtmlCards.replace("<observation>", "");
-            }
-        });
-
-        $("#cards").html(newHtmlCards);
-    }
-
-    function loadTable(lines) {
-        const lastLines = lines.slice(3, lines.length);
-        const tableTemplate = `<tr>
+            $("#noOrdersScreen").hide();
+            const tableTemplate = `<tr>
                                     <td>#<number></td>
                                     <td><items></td>
                                     <td><observation></td>
                                     <td style="font-size: 10px;"><date></td>
                                 </tr>`
 
-        let bodyTable = "";
-        const itemsTemplate = `
+            let bodyTable = "";
+            const itemsTemplate = `
         <div class="chip">
             <name>: <quantity>
         </div>`
 
-        lastLines.forEach(line => {
-            let itemsBody = "";
-            line.items.forEach(item => {
-                itemsBody = `${itemsBody} ${itemsTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`
-            })
-            bodyTable = `${bodyTable} ${tableTemplate.replace("<number>", line.number).replace("<observation>", line.observation == "" ? "-" : `<span class="red-text">${line.observation}</span>`).replace("<items>", itemsBody).replace("<date>", `${(new Date(line.createdAt)).toLocaleDateString('en-GB')} - ${(new Date(line.createdAt)).toLocaleTimeString('en-GB')}`)}`;
-        });
-        $("#tableBody").html(bodyTable);
-
+            lastLines.forEach(line => {
+                let itemsBody = "";
+                line.items.forEach(item => {
+                    itemsBody = `${itemsBody} ${itemsTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`
+                })
+                bodyTable = `${bodyTable} ${tableTemplate.replace("<number>", line.number).replace("<observation>", line.observation == "" ? "-" : `<span class="red-text">${line.observation}</span>`).replace("<items>", itemsBody).replace("<date>", `${(new Date(line.createdAt)).toLocaleDateString('en-GB')} - ${(new Date(line.createdAt)).toLocaleTimeString('en-GB')}`)}`;
+            });
+            $("#tableBody").html(bodyTable);
+            $("#total").show();
+            $("#crads").show();
+            $("#table").show();
+        }
+        else {
+            $("#table").hide();
+        }
     }
 
     function loadTotal(items, totalOrders) {
-        const totalCardTemplate = `   <div class="col s3" style="font-size: 20px;">
+        if (items.length) {
+
+            const totalCardTemplate = `   <div class="col s3" style="font-size: 20px;">
                                         <div class="card-panel teal">
                                             <span class="white-text">
                                                 <name>: <quantity>
@@ -163,7 +184,7 @@
                                         </div>
                                     </div>`
 
-        let body = `<div class="col s3" style="font-size: 20px;">
+            let body = `<div class="col s3" style="font-size: 20px;">
                                         <div class="card-panel grey">
                                             <span class="white-text">
                                                 Pedidos: ${totalOrders}
@@ -171,10 +192,19 @@
                                         </div>
                                     </div>`;
 
-        items.forEach(item => {
-            body = `${body} ${totalCardTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`
-        });
-        $("#total").html(body);
+            items.forEach(item => {
+                body = `${body} ${totalCardTemplate.replace("<name>", item.name).replace("<quantity>", item.quantity)}`
+            });
+            $("#total").html(body);
+            $("#total").show();
+            $("#crads").show();
+            $("#table").show();
+
+        }
+         else {
+            $("#noOrdersScreen").show();
+            $("#total").hide();
+         }
 
     }
 
